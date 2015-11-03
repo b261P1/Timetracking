@@ -1,0 +1,68 @@
+#include <iostream>
+#include <ctime>
+#include <string>
+#include <windows.h>
+#include <stdio.h>
+#include <conio.h>
+
+int result;
+char* tid;
+char clok[] = {  };
+char tid1;
+int io;
+int m;
+int m1;
+int control1;
+using namespace std;
+
+void alarm()
+{
+    //cout << m << m1 << endl;
+    if ( (m == '3') && (m1 == '2') )
+    {
+        if ( control1 == 0)
+        {
+            cout << "Hello, World!" << endl;
+            control1 = 1;
+        }
+    }
+    else
+    {
+        control1 = 0;
+    }
+}
+
+int main() {
+
+    io=1;
+    while (io=1){
+        time_t     now = time(0);
+        std::time_t result = std::time(NULL);
+        string stringForArray;
+        stringForArray = ctime(&result);
+        int TempNumOne=stringForArray.size();
+        char timeArray[24];
+        m = timeArray[14];
+        m1 = timeArray[15];
+        for (int a=0;a<=TempNumOne;a++)
+        {
+            timeArray[a]=stringForArray[a];
+        }
+
+        for (int n = 11; n<=18 ; n++)
+        {
+            cout << timeArray[n] ;
+
+        }
+        cout << endl;
+        Sleep(1000);
+        alarm();
+        if (kbhit())
+        {
+            return 0;
+        }
+
+
+    }
+    return 0;
+}
