@@ -10,6 +10,23 @@ void printHeader (int);
 void printMonth (int, int&);
 void skipToDay (int);
 
+bool leapYearCheck()
+{
+    bool leapYear;
+    if ( ((year % 4) == 0) && ((year % 100) != 0) )
+    	{
+    	leapYear = TRUE;
+    	}
+    else if ((year % 400) == 0) 
+    	{
+    	leapYear = TRUE;
+    	}
+    else
+    	{
+    	leapYear = FALSE;
+    	}
+    return leapYear
+}
 
 int main ()
 {
@@ -67,8 +84,10 @@ int main ()
     int numOfDaysInAMonth (int m){
         if (m == 1)
            return(31);
-        else if (m == 2)
+        else if ((m == 2) && (leapYearCheck() == FALSE))
              return(28);
+        else if ((m == 2) && (leapYearCheck() == TRUE))
+            return(29);
         else if (m == 3)
              return(31);
         else if (m == 4)
