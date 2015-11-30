@@ -25,10 +25,23 @@ int checkYear()
     return(currentYear);
 }
 
+int checkMonth()
+{
+    int currentMonthcheck;
+    time_t currentTime;
+    struct tm *localTime;
+
+    time( &currentTime);
+    localTime = localtime( &currentTime);
+
+    currentMonthcheck = localTime ->tm_mon +1;
+    return (currentMonthcheck);
+}
+
 int main ()
 {
     int firstDayInCurrentMonth;
-    int currentMonth = 1;
+    int currentMonth = checkMonth();
     int numDays;
 
     //cout << "What year do you want a calendar for? ";
@@ -39,15 +52,19 @@ int main ()
     firstDayInCurrentMonth = firstDayofNewYearAndMonth(year);
 
     cout << year << endl;
+    numDays = numOfDaysInAMonth(currentMonth);
+    printHeader(currentMonth);
+    printMonth(numDays, firstDayInCurrentMonth);
+    cout << endl << endl << endl;
 
-    while (currentMonth <= 12)
+   /* while (currentMonth <= 12)
     {
         numDays = numOfDaysInAMonth(currentMonth);
         printHeader(currentMonth);
         printMonth(numDays, firstDayInCurrentMonth);
         cout << endl << endl << endl;
         currentMonth++;
-    }
+    }*/
 
     cout << endl;
 
