@@ -38,7 +38,7 @@ int checkMonth()
     return (currentMonthcheck);
 }
 
-int checkDay()
+/*int checkDay()
 {
     int currentDaycheck;
     time_t currentTime;
@@ -47,25 +47,54 @@ int checkDay()
     time( &currentTime);
     localTime = localtime( &currentTime);
 
-    currentDaycheck = localTime ->tm_wday;
+    currentDaycheck = localTime ->tm_mday;
     return (currentDaycheck);
+}*/
+const char * checkFirstday()
+{
+    const char* firstDay;
+    time_t rawtime;
+    struct tm * timeinfo;
+    int year, month ,day;
+    const char * weekday[] = { "Sunday", "Monday",
+                             "Tuesday", "Wednesday",
+                             "Thursday", "Friday", "Saturday"};
+
+  /* prompt user for date
+  printf ("Enter year: "); fflush(stdout); scanf ("%d",&year);
+  printf ("Enter month: "); fflush(stdout); scanf ("%d",&month);
+  printf ("Enter day: "); fflush(stdout); scanf ("%d",&day);*/
+
+  /* get current timeinfo and modify it to the user's choice */
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+  timeinfo->tm_year = checkYear();
+  timeinfo->tm_mon = checkMonth();
+  timeinfo->tm_mday = 1;
+
+  /* call mktime: timeinfo->tm_wday will be set */
+  mktime ( timeinfo );
+
+  firstDay = weekday[timeinfo->tm_wday];
+
+  return (firstDay);
 }
+
 int main ()
 {
     int firstDayInCurrentMonth;
     int currentMonth = checkMonth();
     int numDays;
     int wday;
-
+    const char* firstDay;
     //cout << "What year do you want a calendar for? ";
     //cin >> year;
+    firstDay = checkFirstday();
     year = checkYear();
     cout << endl;
-    wday = checkDay();
     firstDayInCurrentMonth = firstDayofNewYearAndMonth(year);
 
-    cout << year << endl;
-    cout << wday << endl;
+    cout << year << " " << firstDay << endl;
     numDays = numOfDaysInAMonth(currentMonth);
     printHeader(currentMonth);
     printMonth(numDays, firstDayInCurrentMonth);
