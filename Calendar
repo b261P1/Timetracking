@@ -38,20 +38,34 @@ int checkMonth()
     return (currentMonthcheck);
 }
 
+int checkDay()
+{
+    int currentDaycheck;
+    time_t currentTime;
+    struct tm *localTime;
+
+    time( &currentTime);
+    localTime = localtime( &currentTime);
+
+    currentDaycheck = localTime ->tm_wday;
+    return (currentDaycheck);
+}
 int main ()
 {
     int firstDayInCurrentMonth;
     int currentMonth = checkMonth();
     int numDays;
+    int wday;
 
     //cout << "What year do you want a calendar for? ";
     //cin >> year;
     year = checkYear();
     cout << endl;
-
+    wday = checkDay();
     firstDayInCurrentMonth = firstDayofNewYearAndMonth(year);
 
     cout << year << endl;
+    cout << wday << endl;
     numDays = numOfDaysInAMonth(currentMonth);
     printHeader(currentMonth);
     printMonth(numDays, firstDayInCurrentMonth);
