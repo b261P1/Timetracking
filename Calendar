@@ -2,15 +2,20 @@
 #include <cstdlib>
 #include <iomanip>
 #include <ctime>
+#include <cmath>
+#include <string>
 
 using namespace std;
 
-int firstDayofNewYearAndMonth (int );
 int numOfDaysInAMonth (int);
 void printHeader (int);
-void printMonth (int, int&);
+void printMonth (int);
 void skipToDay (int);
 int year;
+
+/**************************************************************************/
+/* Checks clock tics on the pc since January 1 since 1970                 */
+/**************************************************************************/
 
 int checkYear()
 {
@@ -25,6 +30,10 @@ int checkYear()
     return(currentYear);
 }
 
+/**************************************************************************/
+/* Checks clock tics on the pc since January 1 since 1970                 */
+/**************************************************************************/
+
 int checkMonth()
 {
     int currentMonthcheck;
@@ -38,82 +47,53 @@ int checkMonth()
     return (currentMonthcheck);
 }
 
-/*int checkDay()
-{
-    int currentDaycheck;
-    time_t currentTime;
-    struct tm *localTime;
+/**************************************************************************/
+/* Zeller's Algorithm                                                     */
+/* Checks day of a month and outputs whether it is monday, sunday etc.    */
+/**************************************************************************/
 
-    time( &currentTime);
-    localTime = localtime( &currentTime);
-
-    currentDaycheck = localTime ->tm_mday;
-    return (currentDaycheck);
-}*/
-const char * checkFirstday()
-{
-    const char* firstDay;
-    time_t rawtime;
-    struct tm * timeinfo;
-    int year, month ,day;
-    const char * weekday[] = { "Sunday", "Monday",
-                             "Tuesday", "Wednesday",
-                             "Thursday", "Friday", "Saturday"};
-
-  /* prompt user for date
-  printf ("Enter year: "); fflush(stdout); scanf ("%d",&year);
-  printf ("Enter month: "); fflush(stdout); scanf ("%d",&month);
-  printf ("Enter day: "); fflush(stdout); scanf ("%d",&day);*/
-
-  /* get current timeinfo and modify it to the user's choice */
-  time ( &rawtime );
-  timeinfo = localtime ( &rawtime );
-  timeinfo->tm_year = checkYear();
-  timeinfo->tm_mon = checkMonth();
-  timeinfo->tm_mday = 1;
-
-  /* call mktime: timeinfo->tm_wday will be set */
-  mktime ( timeinfo );
-
-  firstDay = weekday[timeinfo->tm_wday];
-
-  return (firstDay);
+int dayNumber(int m, int d, int y) {
+    if (m == 1 || m == 2) {
+        m = m + 12;
+        y = y - 1;
+    }
+    return (d + (int)floor((13 * (m + 1)) / 5) + y%100 + (int)floor((y%100)/ 4) + (int)floor(((int)floor(y/100))/4) + 5*(int)floor(y/100)) % 7;
 }
+
+/**************************************************************************/
+/* The main algorithm for the calendar program                            */
+/**************************************************************************/
 
 int main ()
 {
-    int firstDayInCurrentMonth;
-    int currentMonth = checkMonth();
+    int currentMonth = 1;
     int numDays;
-    int wday;
-    const char* firstDay;
-    //cout << "What year do you want a calendar for? ";
-    //cin >> year;
-    firstDay = checkFirstday();
+
     year = checkYear();
     cout << endl;
-    firstDayInCurrentMonth = firstDayofNewYearAndMonth(year);
 
-    cout << year << " " << firstDay << endl;
-    numDays = numOfDaysInAMonth(currentMonth);
-    printHeader(currentMonth);
-    printMonth(numDays, firstDayInCurrentMonth);
-    cout << endl << endl << endl;
+    cout << " Year: " << year << endl;
 
-   /* while (currentMonth <= 12)
+    while (currentMonth <= 12)
     {
         numDays = numOfDaysInAMonth(currentMonth);
-        printHeader(currentMonth);
-        printMonth(numDays, firstDayInCurrentMonth);
-        cout << endl << endl << endl;
+        if (currentMonth == checkMonth())
+        {
+            printHeader(checkMonth());
+            printMonth(numDays);
+        }
         currentMonth++;
-    }*/
+    }
 
     cout << endl;
 
     return 0;
 
 }
+
+/**************************************************************************/
+/* Function to check for leap years.                                      */
+/**************************************************************************/
 
 bool leapYearCheck()
 {
@@ -132,23 +112,6 @@ bool leapYearCheck()
     	}
     return leapYear;
 }
-
-
-/**************************************************************************/
-/* This function calculates the first day of the new year                 */
-/* And checks if the year is a leap-year                                  */
-/**************************************************************************/
-
-    int  firstDayofNewYearAndMonth(int year) {
-        int day_start;
-        int x1, x2, x3;
-        // leap-year conditions
-        x1 = (year - 1)/ 4;
-        x2 = (year - 1)/ 100;
-        x3 = (year - 1)/ 400;
-        day_start = (year + x1 - x2 + x3) %7;
-        return day_start;
-    }
 
 /**************************************************************************/
 /* This function returns the number of days in a month                    */
@@ -194,30 +157,30 @@ bool leapYearCheck()
     void printHeader (int m) {
         if (m == 1){
 
-    cout << "January" << endl;
+    cout << " January" << endl;
     }
     else if (m == 2) {
-         cout << "February" << endl; }
+         cout << " February" << endl; }
     else if (m == 3) {
-         cout << "March" << endl; }
+         cout << " March" << endl; }
     else if (m == 4) {
-         cout << "April" << endl; }
+         cout << " April" << endl; }
     else if (m == 5) {
-         cout << "May" << endl; }
+         cout << " May" << endl; }
     else if (m == 6) {
-         cout << "June" << endl; }
+         cout << " June" << endl; }
     else if (m == 7) {
-         cout << "July" << endl; }
+         cout << " July" << endl; }
     else if (m == 8) {
-         cout << "August" << endl; }
+         cout << " August" << endl; }
     else if (m == 9) {
-         cout << "September" << endl; }
+         cout << " September" << endl; }
     else if (m == 10) {
-         cout << "October" << endl; }
+         cout << " October" << endl; }
     else if (m == 11) {
-         cout << "November" << endl; }
+         cout << " November" << endl; }
     else if (m == 12) {
-         cout << "December" << endl; }
+         cout << " December" << endl; }
 
 
     cout << " S  M  T  W  T  F  S" <<endl;
@@ -225,7 +188,7 @@ bool leapYearCheck()
     }
 
 /**************************************************************************/
-/* Helps with the skipToDay function blah blah blah                       */
+/* Helps with the skipToDay function                                      */
 /**************************************************************************/
 
     void skip (int i) {
@@ -239,8 +202,12 @@ bool leapYearCheck()
 /* each month                                                             */
 /**************************************************************************/
 
-    void printMonth (int numDays, int &weekDay) {
+    void printMonth (int numDays) {
         int day = 1;
+        int weekDay;
+
+        weekDay = dayNumber(checkMonth(),01,checkYear()) - 1; // -1 because Zeller's algorithm goes from 1 to 7 while the function works from 0 to 6.
+
         skipToDay(weekDay);
         while (day <= numDays) {
             cout << setw(2) << day << " ";
