@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+struct Event
+{
+    string dateNotice;
+    int date1;
+    int date2;
+    int date3;
+};
+
+int main ()
+{
+  string data;  
+  vector<Event>listOfEvents;
+  Event p;
+  
+  cout << "   What is it you wan't to do?" << endl;
+  cin >> data;
+  
+  int userInput;
+  
+  p.dateNotice = data;
+  
+  cout << "\n Enter a month: ";
+  cin >> userInput;
+  p.date2 = userInput;
+  
+  cout << "\n Enter a day: ";
+  cin >> userInput;
+  
+  p.date1 = userInput;
+  
+  cout << "\n Enter a year: ";
+  cin >> userInput;
+  
+  p.date3 = userInput;
+  
+  listOfEvents.push_back(p);
+
+  return(0);
+}
