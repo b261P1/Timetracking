@@ -19,9 +19,16 @@ char* tid;
 char clok[] = {  };
 char tid1;
 int io;
+int check_m;
+int check_m1;
+int check_q;
+int check_q1;
+int q;
+int q1;
 int m;
 int m1;
 int control1;
+char timeArray[24];
 
 struct Event
 {
@@ -29,6 +36,7 @@ struct Event
     int date1;
     int date2;
     int date3;
+    char userTimeArray [8];
 };
 
 /**************************************************************************/
@@ -44,9 +52,10 @@ int checkTime()
         string stringForArray;
         stringForArray = ctime(&result);
         int TempNumOne=stringForArray.size();
-        char timeArray[24];
         m = timeArray[14];
         m1 = timeArray[15];
+        q = timeArray[17];
+        q1 = timeArray[18];
 
         for (int a=0;a<=TempNumOne;a++)
         {
@@ -59,12 +68,8 @@ int checkTime()
         }
 
         cout << endl;
-        Sleep(1000);
-
-        if (kbhit())
-        {
-            break;
-        }
+        Sleep(350);
+        break;
     }
 }
 
@@ -146,7 +151,7 @@ int main ()
     cout << "3: Print calendar for current month." << endl;
     cout << "4: Change or delete appointment." << endl;
     cout << "5: Program UI sleep." << endl;
-    cout << "\nToday is " << checkDay() << "-" << checkMonth() << "-" << checkYear() << endl;
+    cout << "\nToday is the " << checkDay() << "-" << checkMonth() << "-" << checkYear() << endl;
 
     int counter = 0;
     int userInput;
@@ -166,7 +171,7 @@ int main ()
             cout << "3: Print calendar for current month." << endl;
             cout << "4: Change an appointment." << endl;
             cout << "5: Program UI sleep." << endl;
-            cout << "\nToday is " << checkDay() << "-" << checkMonth() << "-" << checkYear() << endl;
+            cout << "\nToday is the " << checkDay() << "-" << checkMonth() << "-" << checkYear() << endl;
             userInputTwo++;
         }
 
@@ -176,6 +181,7 @@ int main ()
         {
             system("CLS");
             string data;
+            //char userInputThree[8];
 
             cout << "What is it you wan't to do?: ";
             cin.ignore();
@@ -197,6 +203,11 @@ int main ()
             cin >> userInputTwo;
 
             p.date3 = userInputTwo;
+
+            cout << "\nEnter the allocated time for the event: ";
+            cin >> p.userTimeArray;
+
+            //p.userTimeArray = userInputThree;
 
             listOfEvents.push_back(p);
 
@@ -256,6 +267,7 @@ int main ()
                 if (kbhit())
                 {
                     userInputTwo = 3;
+                    break;
                 }
             }
         }
@@ -303,15 +315,55 @@ int main ()
 
         else if (userInput == 5)
         {
-            HWND stealth;
+            /*HWND stealth;
             AllocConsole();
             stealth=FindWindowA("ConsoleWindowClass",NULL);
-            ShowWindow(stealth,0);
+            ShowWindow(stealth,0);*/
 
-            checkTime();
+            while(true)
+            {
+                checkTime();
 
-            stealth=FindWindowA("ConsoleWindowClass",NULL);
-            ShowWindow(stealth,1);
+                char l;
+                char l1;
+                char u;
+                char u1;
+                l = listOfEvents.at(0).userTimeArray[3];
+                l1 = listOfEvents.at(0).userTimeArray[4];
+                u = listOfEvents.at(0).userTimeArray[6];
+                u1 = listOfEvents.at(0).userTimeArray[7];
+
+                /*if ((m == l) && (m1 == l1) && (q == u) && (q1 == u1))
+                {
+                    cout << listOfEvents.at(0).dateNotice << endl;
+                }*/
+
+                int s = checkYear();
+                int s1 = checkMonth();
+                int s2 = checkDay();
+
+
+                for (int n = 1; n  <= counter; n++)
+                {
+                    n = n - 1;
+
+                    if ((listOfEvents.at(n).date3 == s) && (listOfEvents.at(n).date1 == s1) && (listOfEvents.at(n).date2 == s2) && (m == l) && (m1 == l1) && (q == u) && (q1 == u1))
+                    {
+                        cout << listOfEvents.at(n).dateNotice << endl;
+                        n++;
+
+                        break;
+                    }
+                }
+
+                if (kbhit())
+                {
+                    break;
+                }
+            }
+
+            /*stealth=FindWindowA("ConsoleWindowClass",NULL);
+            ShowWindow(stealth,1);*/
 
             userInputTwo = 3;
             userInput = 0;
