@@ -1,11 +1,10 @@
 #include <iostream>
-#include <cstdlib>
 #include <iomanip>
 #include <ctime>
 #include <cmath>
 #include <vector>
-#include <windows.h>
-#include <conio.h>
+#include <windows.h>    //remove when implemented in ROS
+#include <conio.h>      //maybe remove when implemented in ROS
 
 using namespace std;
 
@@ -29,6 +28,9 @@ int m;
 int m1;
 int control1;
 char timeArray[24];
+int userInput;
+int userInputTwo;
+
 
 struct Event
 {
@@ -42,35 +44,30 @@ struct Event
 /**************************************************************************/
 /* Checks clock tics on the pc since January 1 since 1970                 */
 /**************************************************************************/
-int checkTime()
+void checkTime()
 {
-    io=1;
-    while (io=1)
+    time_t result = time(NULL);
+    string stringForArray;
+    stringForArray = ctime(&result);
+    //int TempNumOne=stringForArray.size();
+    m = timeArray[14];
+    m1 = timeArray[15];
+    q = timeArray[17];
+    q1 = timeArray[18];
+
+    for (int a=0;a<=stringForArray.size();a++)
     {
-        time_t     now = time(0);
-        std::time_t result = std::time(NULL);
-        string stringForArray;
-        stringForArray = ctime(&result);
-        int TempNumOne=stringForArray.size();
-        m = timeArray[14];
-        m1 = timeArray[15];
-        q = timeArray[17];
-        q1 = timeArray[18];
-
-        for (int a=0;a<=TempNumOne;a++)
-        {
-            timeArray[a]=stringForArray[a];
-        }
-
-        for (int n = 11; n<=18 ; n++)
-        {
-            cout << timeArray[n];
-        }
-
-        cout << endl;
-        Sleep(350);
-        break;
+        timeArray[a]=stringForArray[a];
     }
+
+    for (int n = 11; n<=18 ; n++)
+    {
+        cout << timeArray[n];
+    }
+
+    Sleep(1000);
+
+    cout << endl;
 }
 
 /**************************************************************************/
@@ -147,27 +144,24 @@ int main ()
     cout << "Welcome to the Turtlebot Trille's user interface." << endl;
     cout << "What would you like to do?" << endl;
     cout << "\n1: Make a new appointment." << endl;
-    cout << "2: Check appointments in the current month." << endl;
+    cout << "2: Check appointments." << endl;
     cout << "3: Print calendar for current month." << endl;
-    cout << "4: Change or delete appointment." << endl;
+    cout << "4: Change an appointment." << endl;
     cout << "5: Program UI sleep." << endl;
     cout << "\nToday is the " << checkDay() << "-" << checkMonth() << "-" << checkYear() << endl;
 
-    int counter = 0;
-    int userInput;
-    int userInputTwo;
     vector<Event>listOfEvents;
     Event p;
 
     while (true)
     {
-        if (userInputTwo == 3)
+        if (userInputTwo == 1)
         {
             system("CLS");
             cout << "Welcome to the Turtlebot Trille's user interface." << endl;
             cout << "What would you like to do?" << endl;
             cout << "\n1: Make a new appointment." << endl;
-            cout << "2: Check appointments in the current month." << endl;
+            cout << "2: Check appointments." << endl;
             cout << "3: Print calendar for current month." << endl;
             cout << "4: Change an appointment." << endl;
             cout << "5: Program UI sleep." << endl;
@@ -180,40 +174,28 @@ int main ()
         if (userInput == 1)
         {
             system("CLS");
-            string data;
-            //char userInputThree[8];
 
             cout << "What is it you wan't to do?: ";
             cin.ignore();
-            getline(cin,data);
-
-            p.dateNotice = data;
+            getline(cin,p.dateNotice);
 
             cout << "\nEnter the month of the event: ";
-            cin >> userInputTwo;
-
-            p.date1 = userInputTwo;
+            cin >> p.date1;
 
             cout << "\nEnter the day of the event: ";
-            cin >> userInputTwo;
-
-            p.date2 = userInputTwo;
+            cin >> p.date2;
 
             cout << "\nEnter the year of the event: ";
-            cin >> userInputTwo;
-
-            p.date3 = userInputTwo;
+            cin >> p.date3;
 
             cout << "\nEnter the allocated time for the event: ";
             cin >> p.userTimeArray;
 
-            //p.userTimeArray = userInputThree;
-
             listOfEvents.push_back(p);
 
-            counter++;
+            cout << listOfEvents.size() << endl;
 
-            userInputTwo = 3;
+            userInputTwo = 1;
         }
 
         else if (userInput == 2)
@@ -223,16 +205,19 @@ int main ()
             cout << "If you wish to change something in one of your appointments," << endl;
             cout << "please note the reference number for the specifik appointent.\n" << endl;
 
-            for (int n=0; n<counter; n++)
+            for (int n=0; n < listOfEvents.size(); n++)
             {
-                cout << "The " << listOfEvents.at(n).date2 << " of " << listOfEvents.at(n).date1 << " year " << listOfEvents.at(n).date3 << endl;
-                cout << listOfEvents.at(n).dateNotice << endl;
+                cout << "Date: " << listOfEvents[n].date2 << "-" << listOfEvents[n].date1 << "-" << listOfEvents[n].date3 << endl;
+                cout << "Time: " << listOfEvents[n].userTimeArray[0] << listOfEvents[n].userTimeArray[1] <<
+                listOfEvents[n].userTimeArray[2] << listOfEvents[n].userTimeArray[3] << listOfEvents[n].userTimeArray[4] <<
+                listOfEvents[n].userTimeArray[5] << listOfEvents[n].userTimeArray[6] << listOfEvents[n].userTimeArray[7] << endl;
+                cout << listOfEvents[n].dateNotice << endl;
                 cout << "Ref nr: " << n << "\n" << endl;
             }
 
             system("PAUSE");
 
-            userInputTwo = 3;
+            userInputTwo = 1;
         }
 
         else if (userInput == 3)
@@ -266,7 +251,7 @@ int main ()
 
                 if (kbhit())
                 {
-                    userInputTwo = 3;
+                    userInputTwo = 1;
                     break;
                 }
             }
@@ -274,51 +259,55 @@ int main ()
 
         else if (userInput == 4)
         {
-           int RefNr;
+            int RefNr;
             string newUserInput;
-            int newUserInputTwo;
             system("CLS");
             cout << "Enter reference number to the appointment you want to change." << endl;
             cout << "Ref nr: ";
             cin >> RefNr;
 
-            cout << "The " << listOfEvents.at(RefNr).date1 << "-" << listOfEvents.at(RefNr).date2 << " year " << listOfEvents.at(RefNr).date3 << endl;
-            cout << listOfEvents.at(RefNr).dateNotice << endl;
+            cout << "\nDate: " << listOfEvents[RefNr].date2 << "-" << listOfEvents[RefNr].date1 << "-" << listOfEvents[RefNr].date3 << endl;
+            cout << "Time: " << listOfEvents[RefNr].userTimeArray[0] << listOfEvents[RefNr].userTimeArray[1] <<
+            listOfEvents[RefNr].userTimeArray[2] << listOfEvents[RefNr].userTimeArray[3] << listOfEvents[RefNr].userTimeArray[4] <<
+            listOfEvents[RefNr].userTimeArray[5] << listOfEvents[RefNr].userTimeArray[6] << listOfEvents[RefNr].userTimeArray[7] << endl;
+            cout << listOfEvents[RefNr].dateNotice << endl;
 
             system("PAUSE");
             system("CLS");
 
             cout << "Enter new description for date: ";
             cin.ignore();
-            getline(cin,newUserInput);
-
-            listOfEvents.at(RefNr).dateNotice = newUserInput;
+            getline(cin,listOfEvents[RefNr].dateNotice);
 
             cout << "\nEnter new month: ";
-            cin >> newUserInputTwo;
-
-            listOfEvents.at(RefNr).date1 = newUserInputTwo;
+            cin >> listOfEvents[RefNr].date1;
 
             cout << "\nEnter new day of month: ";
-            cin >> newUserInputTwo;
-
-            listOfEvents.at(RefNr).date2 = newUserInputTwo;
+            cin >> listOfEvents[RefNr].date2;
 
             cout << "\nEnter new year: ";
-            cin >> newUserInputTwo;
+            cin >> listOfEvents[RefNr].date3;
 
-            listOfEvents.at(RefNr).date3 = newUserInputTwo;
+            cout << "\nEnter new time: ";
+            cin >> listOfEvents[RefNr].userTimeArray[0];
+            cin >> listOfEvents[RefNr].userTimeArray[1];
+            cin >> listOfEvents[RefNr].userTimeArray[2];
+            cin >> listOfEvents[RefNr].userTimeArray[3];
+            cin >> listOfEvents[RefNr].userTimeArray[4];
+            cin >> listOfEvents[RefNr].userTimeArray[5];
+            cin >> listOfEvents[RefNr].userTimeArray[6];
+            cin >> listOfEvents[RefNr].userTimeArray[7];
 
             system("PAUSE");
-            userInputTwo = 3;
+            userInputTwo = 1;
         }
 
         else if (userInput == 5)
         {
-            /*HWND stealth;
+            HWND stealth;
             AllocConsole();
             stealth=FindWindowA("ConsoleWindowClass",NULL);
-            ShowWindow(stealth,0);*/
+            ShowWindow(stealth,0);
 
             while(true)
             {
@@ -328,32 +317,34 @@ int main ()
                 char l1;
                 char u;
                 char u1;
-                l = listOfEvents.at(0).userTimeArray[3];
-                l1 = listOfEvents.at(0).userTimeArray[4];
-                u = listOfEvents.at(0).userTimeArray[6];
-                u1 = listOfEvents.at(0).userTimeArray[7];
+                char o;
+                char o1;
 
-                /*if ((m == l) && (m1 == l1) && (q == u) && (q1 == u1))
+                for (int n = 0; n < listOfEvents.size();)
                 {
-                    cout << listOfEvents.at(0).dateNotice << endl;
-                }*/
 
-                int s = checkYear();
-                int s1 = checkMonth();
-                int s2 = checkDay();
+                    o = listOfEvents[n].userTimeArray[0];
+                    o1 = listOfEvents[n].userTimeArray[1];
+                    l = listOfEvents[n].userTimeArray[3];
+                    l1 = listOfEvents[n].userTimeArray[4];
+                    u = listOfEvents[n].userTimeArray[6];
+                    u1 = listOfEvents[n].userTimeArray[7];
 
-
-                for (int n = 1; n  <= counter; n++)
-                {
-                    n = n - 1;
-
-                    if ((listOfEvents.at(n).date3 == s) && (listOfEvents.at(n).date1 == s1) && (listOfEvents.at(n).date2 == s2) && (m == l) && (m1 == l1) && (q == u) && (q1 == u1))
+                    if ((listOfEvents[n].date3 == checkYear()) && (listOfEvents[n].date1 == checkMonth()) &&
+                        (listOfEvents[n].date2 == checkDay()) && m == l && m1 == l1 &&
+                        q == u && q1 == u1 && o == timeArray[11] && o1 == timeArray[12])
                     {
-                        cout << listOfEvents.at(n).dateNotice << endl;
-                        n++;
+                        system("CLS");
 
-                        break;
+                        ShowWindow(stealth,1);
+
+                        cout << listOfEvents[n].dateNotice << endl;
+
+                        system("PAUSE");
+
+                        ShowWindow(stealth,0);
                     }
+                        n++;
                 }
 
                 if (kbhit())
@@ -362,10 +353,10 @@ int main ()
                 }
             }
 
-            /*stealth=FindWindowA("ConsoleWindowClass",NULL);
-            ShowWindow(stealth,1);*/
+            stealth=FindWindowA("ConsoleWindowClass",NULL);
+            ShowWindow(stealth,1);
 
-            userInputTwo = 3;
+            userInputTwo = 1;
             userInput = 0;
         }
     }
@@ -439,6 +430,9 @@ int numOfDaysInAMonth (int m)
 
     else if (m == 12)
         return(31);
+
+    else
+        return(-1);
 }
 
 /**************************************************************************/
